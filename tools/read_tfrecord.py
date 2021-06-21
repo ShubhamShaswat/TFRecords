@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import tensorflow as tf 
 import argparse
+import sys
 
 BATCH_SIZE = 64
 IMAGE_SIZE = [128,128]
