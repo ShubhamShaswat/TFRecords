@@ -1,5 +1,10 @@
 import os 
 import matplotlib.pyplot as plt
+import tensorflow as tf 
+import argparse
+
+
+
 
 def _parse_image_function(example_proto):
   # Parse the input tf.Example proto using the dictionary above.
@@ -24,3 +29,11 @@ def view_image(ds):
     for i in range(20):
         ax = fig.add_subplot(4, 5, i+1, xticks=[], yticks=[])
         ax.imshow(images[i])
+
+def get_dataset(filenam):
+
+    dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
+    dataset = dataset.map(_parse_image_function, num_parallel_calls=AUTO)
+    #train_dataset = train_dataset.map(process_data, num_parallel_calls=AUTO)
+    dataset = dataset.repeat().shuffle(1024).batch(BATCH_SIZE)
+    #dataset = dataset.map(...) # TFRecord decoding here...
