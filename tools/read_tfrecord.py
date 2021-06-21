@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import tensorflow as tf 
 import argparse
 
-
-
+BATCH_SIZE = 64
+IMAGE_SIZE = [128,128]
+AUTO = tf.data.experimental.AUTOTUNE
 
 def _parse_image_function(example_proto):
   # Parse the input tf.Example proto using the dictionary above.
@@ -17,7 +18,7 @@ def decode_image(image_data):
     #decode image 
     image = tf.image.decode_jpeg(image_data, channels=3)
     image = tf.cast(image, tf.float32) / 255.0  # convert image to floats in [0, 1] range
-    image = tf.image.resize(image,[IMG_HEIGHT,IMG_WIDTH])
+    image = tf.image.resize(image,IMAGE_SIZE)
     return image
 
  #function to plot images
@@ -31,9 +32,19 @@ def view_image(ds):
         ax.imshow(images[i])
 
 def get_dataset(filenam):
-
     dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
     dataset = dataset.map(_parse_image_function, num_parallel_calls=AUTO)
-    #train_dataset = train_dataset.map(process_data, num_parallel_calls=AUTO)
-    dataset = dataset.repeat().shuffle(1024).batch(BATCH_SIZE)
-    #dataset = dataset.map(...) # TFRecord decoding here...
+    dataset = dataset.batch(BATCH_SIZE)
+    return dataset
+
+def run_cmdLine(argv):
+    parser = argparse.ArgumentParser(prog=argv[0], description='Show image from TFRecordDataset')
+    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='tasks', action='append_const', const='tfrecords')
+
+    args = parser.parse_args()
+    if not args.tasks:
+        print('No tasks specified. Please see "-h" for help.')
+        exit(1)
+    
+
+
