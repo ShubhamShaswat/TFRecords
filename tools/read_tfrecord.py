@@ -8,6 +8,12 @@ BATCH_SIZE = 64
 IMAGE_SIZE = [128,128]
 AUTO = tf.data.experimental.AUTOTUNE
 
+# Create a dictionary describing the features.
+image_feature_description = {
+
+    'image': tf.io.FixedLenFeature([], tf.string),
+}
+
 def _parse_image_function(example_proto):
   # Parse the input tf.Example proto using the dictionary above.
   parsed_example = tf.io.parse_single_example(example_proto, image_feature_description)
@@ -39,7 +45,7 @@ def get_dataset(filename):
 
 def run_cmdLine(argv):
     parser = argparse.ArgumentParser(prog=argv[0], description='Show image from TFRecordDataset')
-    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='filename', action='append_const', const='tfrecords')
+    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='filename', metavar="FILE")
 
     args = parser.parse_args()
     if not args.filename:
