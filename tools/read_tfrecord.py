@@ -48,6 +48,6 @@ def run_cmdLine(argv):
     view_image(ds)
     
 if __name__ == "__main__":
-    run_cmdline(sys.argv)
+    run_cmdLine(sys.argv)
 
 
