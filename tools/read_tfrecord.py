@@ -37,8 +37,9 @@ def view_image(ds):
         ax = fig.add_subplot(4, 5, i+1, xticks=[], yticks=[])
         ax.imshow(images[i])
 
-def get_dataset(filename):
-    dataset = tf.data.TFRecordDataset(filename, num_parallel_reads=AUTO)
+def get_dataset(data_dir):
+    filenames = tf.io.gfile.glob(data_dir)
+    dataset = tf.data.TFRecordDataset(filenames num_parallel_reads=AUTO)
     dataset = dataset.map(_parse_image_function, num_parallel_calls=AUTO)
     dataset = dataset.batch(BATCH_SIZE)
     return dataset
@@ -51,6 +52,7 @@ def run_cmdLine(argv):
     if not args.filename:
         print('No tasks specified. Please see "-h" for help.')
         exit(1)
+    print(args.filename)
     ds = get_dataset(args.filename)
     view_image(ds)
     
