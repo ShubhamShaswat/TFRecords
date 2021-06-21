@@ -11,7 +11,6 @@ def _parse_image_function(example_proto):
   # Parse the input tf.Example proto using the dictionary above.
   parsed_example = tf.io.parse_single_example(example_proto, image_feature_description)
   image = decode_image(parsed_example['image'])
-
   return image
 
 def decode_image(image_data):
@@ -31,20 +30,24 @@ def view_image(ds):
         ax = fig.add_subplot(4, 5, i+1, xticks=[], yticks=[])
         ax.imshow(images[i])
 
-def get_dataset(filenam):
-    dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
+def get_dataset(filename):
+    dataset = tf.data.TFRecordDataset(filename, num_parallel_reads=AUTO)
     dataset = dataset.map(_parse_image_function, num_parallel_calls=AUTO)
     dataset = dataset.batch(BATCH_SIZE)
     return dataset
 
 def run_cmdLine(argv):
     parser = argparse.ArgumentParser(prog=argv[0], description='Show image from TFRecordDataset')
-    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='tasks', action='append_const', const='tfrecords')
+    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='filename', action='append_const', const='tfrecords')
 
     args = parser.parse_args()
-    if not args.tasks:
+    if not args.filename:
         print('No tasks specified. Please see "-h" for help.')
         exit(1)
+    ds = get_dataset(args.filename)
+    view_image(ds)
     
+if __name__ == "__main__":
+    run_cmdline(sys.argv)
 
 
