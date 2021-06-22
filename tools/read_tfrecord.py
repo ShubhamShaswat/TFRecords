@@ -46,14 +46,13 @@ def get_dataset(data_dir):
 
 def run_cmdLine(argv):
     parser = argparse.ArgumentParser(prog=argv[0], description='Show image from TFRecordDataset')
-    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='filename', metavar="FILE")
+    parser.add_argument('-r', '--tfrecords',    help='input file as tfrecord', dest='gcs_dir', metavar="FILE")
 
     args = parser.parse_args()
-    if not args.filename:
+    if not args.gcs_dir:
         print('No tasks specified. Please see "-h" for help.')
         exit(1)
-    print(args.filename)
-    ds = get_dataset(args.filename)
+    ds = get_dataset(args.gcs_dir)
     view_image(ds)
     
 if __name__ == "__main__":
