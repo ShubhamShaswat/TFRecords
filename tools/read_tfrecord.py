@@ -39,7 +39,7 @@ def view_image(ds):
 
 def get_dataset(data_dir):
     filenames = tf.io.gfile.glob(data_dir)
-    dataset = tf.data.TFRecordDataset(filenames num_parallel_reads=AUTO)
+    dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
     dataset = dataset.map(_parse_image_function, num_parallel_calls=AUTO)
     dataset = dataset.batch(BATCH_SIZE)
     return dataset
