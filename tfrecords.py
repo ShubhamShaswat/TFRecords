@@ -108,6 +108,7 @@ image_feature_description = {
     'image': tf.io.FixedLenFeature([], tf.string),
 }
 
+#--------------------------------------Read from TF records------------------------
 def _parse_image_function(example_proto):
   # Parse the input tf.Example proto using the dictionary above.
   parsed_example = tf.io.parse_single_example(example_proto, image_feature_description)
